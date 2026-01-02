@@ -5,17 +5,23 @@ Migrates 824+ historical vehicle records from legacy HTML files to a Django web 
 
 ## File Structure
 
-**`import_all.py`** - Master data import script. Parses HTML files, extracts vehicle data, assigns missing engine numbers, generates Bootstrap-styled content.
+**`import_all.py`** - Master data import script for V16. Parses HTML files, extracts vehicle data, assigns missing engine numbers, generates Bootstrap-styled content.
 
-**`buildV16.py`** - JAlbum batch generator. Processes 400+ vehicles with 2000+ images, executes JAlbum Java application, updates database URLs.
+**`import_1953.py`** - data import script for EL1953. Parses HTML files, extracts vehicle data, use dictionary to collect all cars information.
+
+**`buildV16.py`** - JAlbum batch generator. Processes 800 V16 vehicles with 2000+ images, use /home/ncdbproj/CadillacDBProj/ContributionPublishing/views.py admin built in commands to generate jalbums, 
+populate the 4 databases of ContributionPublishing, also generate nested albums as requested, use java and jap from the .env files directly.
+
+**`build1953.py`** - Album batch generator. Processes 1953 vehicles with 203 images, use /home/ncdbproj/CadillacDBProj/ContributionPublishing/views.py admin built in commands to generate jalbums, 
+populate the 4 databases of ContributionPublishing, also generate nested albums as requested, use java and jap from the .env files directly.
 
 **`models.py`** - Django data models for V16_Cardetails, V16_CardetailsAsset, V16_Carimages, V16_Chapters. Includes `is_generated_engine_number` field.
 
-**`views.py`** - View controllers with search_by_engine(), cardisplay() for pagination, year consolidation, three-tier JAlbum fallback logic.
+**`views.py`** - View controllers with search_by_engine(), cardisplay() for pagination, year consolidation
 
 **`admin.py`** - Custom admin with color-coded badges, batch verification, filtered views, collapsible fieldsets.
 
-**`car_template.html`** - Frontend template with Bootstrap 5 layout, form-based search, JAlbum iframe integration, merged year display.
+**`car_template.html`** - Frontend template with form-based search, merged year display.
 
 ### Activation
 ```bash
@@ -46,20 +52,3 @@ http://184.168.29.112:8000/survivors-registry/Sixteens/year-1930/
 Search by engine number (e.g., "700003" or "#700003")
 ```
 
-## Known Issues (TA Feedback)
-
-### Issues Identified by Joanna
-
-**1. Configuration Path Management and .jap setting problem**
-The .env file defines specific paths for Java and .jap configuration files, 
-but the current code (buildV16.py) may not be using these paths consistently across different user accounts.
-Also generated jalbums don't match production visual styles.
-
-**2. Directory Structure**
-The physical directory structure created by `buildV16.py` doesn't match JAlbum's expected hierarchy.
-So there are missing backgrounds and broken links.
-
-**3. Code Reuse and work flow integration**
-TA suggests to call existing `make_timeline_album()` and `batch_generate_albums()` from `ContributionPublishing/views.py`
-Also JAlbum generation is disconnected from contribution workflow,
- TA suggests to integrate with existing logic in ContributionPublishing/views.py for dynamic album management

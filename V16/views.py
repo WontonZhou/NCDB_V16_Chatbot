@@ -141,21 +141,14 @@ def cardisplay(request,year):
     DEFAULT_CS_ALBUM = "/jalbum/jalbum_defaults/1930_V16/ComingSoon/album/index.html"
 
     for car in cars.object_list:
-        # Check V16_CardetailsAsset for newly imported/updated albums
-        asset = V16_CardetailsAsset.objects.filter(carid=car.carid).exclude(
-            Q(jalbumlink='placeholder') | Q(jalbumlink='') | Q(jalbumlink__isnull=True)
-        ).order_by('-folder_name').first()
-    
-        if asset:
-            raw = asset.jalbumlink
-            jalbum_link = raw if raw.startswith('/static/') else f"/static{raw}"
-        # Check main V16_Cardetails table
-        elif car.jalbumlink and car.jalbumlink not in ['placeholder', '', None]:
-            jalbum_link = car.jalbumlink
-        # Fallback to Coming Soon default page
-        else:
-            jalbum_link = f"/static{DEFAULT_CS_ALBUM}"
-        break
+      if car.jalbumlink and car.jalbumlink not in ['placeholder', '', None]:
+          jalbum_link = car.jalbumlink
+          if not jalbum_link.startswith('/static/'):
+              jalbum_link = f"/static{jalbum_link}"
+      else:
+          # Fallback: Coming Soon
+          jalbum_link = f"/static{DEFAULT_CS_ALBUM}"
+      break
 
     folders = [(car, [Post(p) for p in V16_CardetailsAsset.objects.filter(
                 Q(carid=car.carid) & Q(disable_from_timeline=False)).order_by('-folder_name')])

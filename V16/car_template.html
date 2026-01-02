@@ -1,29 +1,27 @@
 {% extends 'EB/base.html' %}
-{% load static %}
 
 {% block title %}Survivor Cars{% endblock %}
 
 {% block content %}
+		  
 <div class="container">
     <div class="row mt-5">
         <br/>
         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">NCDB</a></li>
-                <li class="breadcrumb-item"><a href="/Survivors">Survivors</a></li>
-                <li class="breadcrumb-item"><a href="/Survivors/V16">V16</a></li>
-                {# Merged display for 1930-1931 #}
-                {% if year == '1930' or year == '1931' %}
+	  		<ol class="breadcrumb">
+	            <li class="breadcrumb-item"><a href="/">NCDB</a></li>
+				<li class="breadcrumb-item"><a href="/Survivors">Survivors</a></li>
+	            <li class="breadcrumb-item"><a href="/Survivors/V16">V16</a></li>
+		        {% if year == '1930' or year == '1931' %}
                 <li class="breadcrumb-item active" aria-current="page">Years 1930-1931</li>
                 {% else %}
                 <li class="breadcrumb-item active" aria-current="page">Year {{ year }}</li>
                 {% endif %}
-            </ol>
-        </nav>
+	  		</ol>
+	  	</nav>
     </div>
 </div>
 
-{# Display Django messages e.g., engine number not found #}
 {% if messages %} 
 <div class="container">
     <div class="row">
@@ -37,25 +35,20 @@
 {% endif %}
 
 <div class="container">
-    <div class="row">
-        <div class="form-group col-sm-8 text-center">
-            <div class="input-group mb-3">
-                <a class="btn btn-primary text-decoration-none page-link" onclick="this.href='?page={{ cars.number }}&survivor=pk'" title="Previous survivor">
-                    <p class="pt-2">PS</p>
-                </a>
-                
-                <ul class="pagination pagination-centered">
-                    <li class="page-item"><a class="page-link" title="First" href="?page=1"><<</a></li>
-                    {% if cars.has_previous %}
-                        <li class="page-item"><a class="page-link" title="Previous" href="?page={{ cars.previous_page_number }}"><</a></li>
-                    {% endif %}
-                    
-                    {# Cleaner pagination loop without redundant offset logic for merged years #}
-                    {% for pg in cars.paginator.page_range %}
-                        {% if pg <= maxpage and pg >= minpage and pg != cars.number %}
-                            {% if year == '1930' or year == '1931' %}
-                                <li class="page-item"><a class="page-link" title="Page {{pg}}" href="?page={{ pg }}">{{pg}}</a></li>
-                            {% elif year == '1935' %}
+	<div class="row">
+		<div class="form-group col-sm-8 text-center">
+			<div class="input-group mb-3">
+				<a class="btn btn-primary text-decoration-none page-link" onclick="this.href='?page={{ cars.number }}&survivor=pk'" title="Previous survivor"><p class="pt-2">PS</p></a>
+				<ul class="pagination pagination-centered">
+				    <li class="page-item"><a class="page-link" title="First" href="?page=1"><<</a></li>
+					{% if cars.has_previous %}
+				    	<li class="page-item"><a class="page-link" title="Previous" href="?page={{ cars.previous_page_number }}"><</a></li>
+				  	{% endif %}
+					{% for pg in cars.paginator.page_range %}
+						{% if pg <= maxpage and pg >= minpage and pg != cars.number %}
+							{% if year == '1930' or year == '1931' %}
+					      		<li class="page-item"><a class="page-link" title="Page {{pg}}" href="?page={{ pg }}">{{pg}}</a></li>
+							{% elif year == '1935' %}
                                 <li class="page-item"><a class="page-link" title="Car engine #{{pg|add:'100'}}" href="?page={{ pg }}">{{pg|add:"100"}}</a></li>
                             {% elif year == '1936' %}
                                 <li class="page-item"><a class="page-link" title="Car engine #{{pg|add:'200'}}" href="?page={{ pg }}">{{pg|add:"200"}}</a></li>
@@ -64,26 +57,30 @@
                             {% else %}
                                 <li class="page-item"><a class="page-link" title="Car engine #{{pg}}" href="?page={{ pg }}">{{pg}}</a></li>
                             {% endif %}
-                        {% elif pg == cars.number %}
-                            <li class="page-item active"><a class="page-link" title="Page {{pg}}" href="?page={{ pg }}">{{pg}}</a></li>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if cars.has_next %}
-                        <li class="page-item"><a class="page-link" title="Next" href="?page={{ cars.next_page_number }}">></a></li>
-                    {% endif %}
-                    <li class="page-item"><a class="page-link" title="Last" href="?page={{ endindex }}">>></a></li>
-                </ul>
-                
-                <a class="btn btn-primary text-decoration-none page-link" onclick="this.href='?page={{ cars.number }}&survivor=nk'" title="Next survivor">
-                    <p class="pt-2">NS</p>
-                </a>
-            </div>
-        </div>
-        
-        <div class="form-group col-xs-4 col-sm-4">
-            {# Replaced raw JS navigation with a proper HTML form pointing to the new Search View #}
-            {% if year == '1930' or year == '1931' %}
+					   	{% elif pg == cars.number %}
+							{% if year == '1930' or year == '1931' %}
+					      		<li class="page-item"><a class="page-link" title="Page {{pg}}" href="?page={{ pg }}">{{pg}}</a></li>
+							{% elif year == '1935' %}
+                                <li class="page-item"><a class="page-link" title="Car engine #{{pg|add:'100'}}" href="?page={{ pg }}">{{pg|add:"100"}}</a></li>
+                            {% elif year == '1936' %}
+                                <li class="page-item"><a class="page-link" title="Car engine #{{pg|add:'200'}}" href="?page={{ pg }}">{{pg|add:"200"}}</a></li>
+                            {% elif year == '1937' %}
+                                <li class="page-item"><a class="page-link" title="Car engine #{{pg|add:'300'}}" href="?page={{ pg }}">{{pg|add:"300"}}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" title="Car engine #{{pg}}" href="?page={{ pg }}">{{pg}}</a></li>
+                            {% endif %}
+					   	{% endif %}
+					{% endfor %}
+					{% if cars.has_next %}
+					    <li class="page-item"><a class="page-link" title="Next" href="?page={{ cars.next_page_number }}">></a></li>
+					{% endif %}
+					<li class="page-item"><a class="page-link" title="Last" href="?page={{ endindex }}">>></a></li>
+				</ul>
+				<a class="btn btn-primary text-decoration-none page-link" onclick="this.href='?page={{ cars.number }}&survivor=nk'" title="Next survivor"><p class="pt-2">NS</p></a>
+			</div>
+		</div>
+		<div class="form-group col-xs-4 col-sm-4">
+			{% if year == '1930' or year == '1931' %}
                 <div class="input-group mb-3">
                     <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Year</button>
                     <ul id="yeardropdown" class="dropdown-menu">
@@ -115,139 +112,120 @@
                     </form>
                 </div>
             {% endif %}
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-4">
-            {# Renamed button to More Information #}
-            <button class="btn btn-primary btn-sm" id="btnAlbumStatus" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="summaryView carCollapse" onclick="reloadAlbumFrame()">More Information</button>
-        </div>
-    </div>
-
-    <div id="summaryView" class="collapse multi-collapse show">
-        <div class="container">
-            {% for car in cars.object_list %}
-            <div class="row">
-                <div class="col-sm pt-2 pb-2">
-                    <h2>{{ car.title | safe }}</h2> 
-                    {# Information note regarding the merged year display #}
-                    {% if year == '1930' or year == '1931' %}
+	    </div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<button class="btn btn-primary btn-sm" id="btnAlbumStatus" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="summaryView carCollapse" onclick="reloadAlbumFrame()">Timeline</button>
+		</div>
+	</div>
+	<div id="summaryView" class="collapse multi-collapse show">
+		<div class="container">
+			{% for car in cars.object_list %}
+			<div class="row">
+				<div class="col-sm pt-2 pb-2">
+					<h2>{{car.title | safe}}</h2>
+					{% if year == '1930' or year == '1931' %}
                     <p class="text-muted"><small><i class="fa fa-info-circle"></i> 1930-1931 V16 records are displayed together as they share the same Series 452/452A platform.</small></p>
                     {% endif %}
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding:0px">
-                    {# Use the jalbum link variable which includes Coming Soon fallback logic #}
-                    {% if jalbum_link %}
-                    <iframe src="{{ jalbum_link }}"
-                            style="width:100%; height:500px; border:none; background-color:#000;"
-                            title="V16 Photo Album">
-                    </iframe>
-                    {% endif %}
-                    {# Dynamic image counter and status label #}
-                    <div class="text-center mt-2">
-                        <small class="text-muted">{% if car_images %}{{ car_images|length }} image(s) available{% else %}Photo album coming soon{% endif %}</small>
-                    </div>        
-                </div>
-
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <div class="description-container">
-                        <br>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-sm pt-2 pl-1">
-                                    <p class="text-justify">As of {{ current_date }}, this is the information we have about this car:</p>
-                                    <p class="text-justify">{{ car.content | safe }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-
-    {# More Information detail view #}
-    <div id="carCollapse" class="collapse multi-collapse">
-        {% for folder in folders %}
-        <div class="container">
-            <div class="row">
-                <div class="col-sm pt-2 pb-2">
-                    <h2>{{ folder.0.title | safe }}</h2>
-                </div>
-                {% if showbuttonboolean %}
-                <div class="col-sm pb-2 pt-2">
-                    <a class="btn btn-primary float-right" href="/contribute/contribute_form/V16/{{folder.0.caryear}}/{{folder.0.carnum}}/{{folder.0.carid}}/now" role="button">Add New</a>
-                </div>
-                {% endif %}
-            </div>
-
-            {% for post in folder.1 %}
-            <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapseOne-{{forloop.counter}}" aria-expanded="true" aria-controls="collapseOne">{{post.pretty_folder_name | safe}}</button>
-            
-            <div>
-                <div class="row mb-3 collapse show" id="collapseOne-{{forloop.counter}}">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding:0px">
-                         {# Consistent use of dynamic jalbum_link #}
-                        {% if jalbum_link %}
-                            <iframe src="{{ jalbum_link }}" 
-                                    style="width:100%; height:500px; border:none; background-color:#000;"
-                                    title="V16 Photo Album Details">
-                            </iframe>
-                        {% endif %} 
-                        <div class="text-center mt-2">
-                            <small class="text-muted">{% if car_images %}{{ car_images|length }} image(s) available{% else %}Photo album coming soon{% endif %}</small>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <div class="description-container">
-                            <br>
-                            <div class="container">
-                                {% if showbuttonboolean %}
-                                <div class="row">
-                                    <div class="col-sm pl-0">
-                                        <a class="btn btn-primary float-right" href="/contribute/contribute_form/V16/{{folder.0.caryear}}/{{folder.0.carnum}}/{{folder.0.carid}}/{{post.post.folder_name}}" role="button">Update</a>
-                                    </div>
-                                </div>
-                                {% endif %}
-                                <div class="row">
-                                    <div class="col-sm pt-2 pl-1">
-                                        <p class="text-justify">{{post.post.content | safe}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% endfor %}
-    </div>
+          {% if '*</span>' in car.content %}
+                    <p class="text-muted"><small><i class="fa fa-exclamation-triangle"></i> Engine numbers marked with <span style="color: red; font-style: italic;">*</span> are unknown and temporary engine numbers are assigned pending discovery of the actual number.</small></p>
+                    {% endif %}          
+				</div>
+			</div>
+			<div class = "row" >
+				{% if car.jalbumlink|length != 0 %}
+				<div class = "col-lg-6 col-md-6 col-sm-6 col-xs-12"  style="padding:0px">
+					<div class="embed-container">
+						<iframe src="{{car.jalbumlink}}" id="summaryjalbumlink" width="640" frameborder="0" allowfullscreen allowtransparency></iframe>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+					<div class="description-container">
+						<br>
+						<div class="container">
+							<div class="row">
+								<div class="col-sm pt-2 pl-1">
+									<p class="text-justify">As of {{ current_date }}, this is the information we have about this car:</p>
+									<p class="text-justify">{{car.content | safe}}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>						
+		       	{% endif %}
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+	<div id="carCollapse" class="collapse multi-collapse">
+		{% for folder in folders %}
+		<div class="container" id="carCollapse">
+			<div class="row">
+				<div class="col-sm pt-2 pb-2">
+					<h2>{{folder.0.title | safe}}</h2>
+				</div>
+				{% if showbuttonboolean %}
+				<div class="col-sm pb-2 pt-2">
+					<a class="btn btn-primary float-right" href="/contribute/contribute_form/V16/{{folder.0.caryear}}/{{folder.0.carnum}}/{{folder.0.carid}}/now" role="button">Add New</a>
+				</div>
+				{% endif %}
+			</div>
+			{% for post in folder.1 %}
+			
+			<button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapseOne-{{forloop.counter}}" aria-expanded="true" aria-controls="collapseOne">{{post.pretty_folder_name | safe}}</button>
+			<div>
+			<div class="row mb-3 collapse show" id="collapseOne-{{forloop.counter}}">
+				{% if post.post.jalbumlink|length != 0 %}
+					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding:0px">
+						<div class="embed-container">
+						  <iframe src="{{post.post.jalbumlink}}" id="jalbumlink" width="640" height="960" frameborder="0" allowfullscreen allowtransparency></iframe>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+						<div class="description-container">
+							<br>
+							<div class="container">
+								{% if showbuttonboolean %}
+								<div class="row">
+									<div class="col-sm pl-0">
+										<a class="btn btn-primary float-right" href="/contribute/contribute_form/V16/{{folder.0.caryear}}/{{folder.0.carnum}}/{{folder.0.carid}}/{{post.post.folder_name}}" role="button">Update</a>
+									</div>
+								</div>
+								{% endif %}
+								<div class="row">
+									<div class="col-sm pt-2 pl-1">
+										<p class="text-justify">{{post.post.content | safe}}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endif %}
+			</div>
+			</div>
+			{% endfor %}
+		</div>
+		{% endfor %}
+	</div>
 </div>
-
 <script type='text/javascript'>
 function reloadAlbumFrame() {
-    var toggleButtonElement = document.getElementById('btnAlbumStatus');
-    var buttonCurrentText = toggleButtonElement.innerText;
-    
-    if (buttonCurrentText == "More Information") {
-        $("#btnAlbumStatus").html('Summary');
-    }
-    if (buttonCurrentText == "Summary") {
-        $("#btnAlbumStatus").html('More Information');
-    }
+	var toggleButtonElement = document.getElementById('btnAlbumStatus');
+	var buttonCurrentText = btnAlbumStatus.innerText;
+	
+	if (buttonCurrentText == "Timeline") {
+		$("#btnAlbumStatus").html('Summary');
+	}
+	if (buttonCurrentText == "Summary") {
+		$("#btnAlbumStatus").html('Timeline');
+	}
 
-    var iframes = document.getElementsByTagName('iframe');
-    if (!iframes) return false;
-    for(var i = 0; i < iframes.length; i++) {
-        iframes[i].contentDocument.location.reload(true);
-    }
+	var iframes = document.getElementsByTagName('iframe');
+	if (!iframes) return false;
+	for(var i = 0; i < iframes.length; i++) {
+		iframes[i].contentDocument.location.reload(true);
+	}
 }
 </script>
 {% endblock %}
