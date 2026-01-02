@@ -33,7 +33,7 @@ def build_all():
     # Build JAlbum galleries for all 1953 Eldorado cars
     print("\n" + "="*60 + "\n1953 ELDORADO - JALBUM BUILD\n" + "="*60)
     
-    # Get admin user
+    # get admin user
     db = ContributionApplContent.objects.db
     adm = User.objects.using(db).filter(is_superuser=True).first()
     if not adm:
@@ -118,7 +118,7 @@ def build_all():
                 )
                 
                 # Copy images to storage
-                sub = f"53EL{car.carnum:03d}"
+                sub = f"53EL{car.carnum}"
                 sto = Path(settings.IMAGE_STORE_ROOT) / pth / sub / fts
                 sto.mkdir(parents=True, exist_ok=True)
                 
